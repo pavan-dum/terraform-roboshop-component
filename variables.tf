@@ -20,6 +20,10 @@ variable "domain_name" {
 }
 
 
+variable "app_version" {
+    type = string
+}
+
 
 variable "health_check_path" {
         default = "/health"
