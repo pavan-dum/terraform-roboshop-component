@@ -60,7 +60,7 @@ resource "aws_ami_from_instance" "main" {
 resource "aws_lb_target_group" "main" {
   name     = "${var.project}-${var.Environment}-${var.component}"
   port     = local.port_number
-  protocol = local.protocol
+  protocol = "HTTP"
   vpc_id   = local.vpc_id
 
   deregistration_delay = 60
@@ -71,7 +71,7 @@ resource "aws_lb_target_group" "main" {
     matcher = "200-299"
     path = local.health_check_path
     port = local.port_number
-    protocol = local.protocol
+    protocol = "HTTP"
     timeout = 2
     unhealthy_threshold = 3
   }
