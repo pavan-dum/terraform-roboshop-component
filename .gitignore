@@ -1,0 +1,44 @@
+# ===============================
+# Terraform .gitignore (Production Safe)
+# ===============================
+
+# Ignore .terraform directories anywhere
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+**/terraform.tfstate
+**/terraform.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Sensitive variable files (usually contain passwords / secrets)
+*.tfvars
+*.tfvars.json
+
+# Override files (local overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore plan output files
+*.tfplan
+planout
+
+# Ignore transient lock info file
+.terraform.tfstate.lock.info
+
+# Ignore CLI config files
+.terraformrc
+terraform.rc
+
+# Ignore graph output files
+*.dot
+
+# OS generated files
+.DS_Store
+Thumbs.db
