@@ -46,12 +46,7 @@ resource "aws_ec2_instance_state" "main" {
   instance_id = aws_instance.main.id
   state       = "stopped"
   depends_on  = [terraform_data.main]
-    tags = merge(
-    {
-        Name = "${var.project}-${var.Environment}-${var.component}"
-    },
-    local.common_tags
-  )
+  
 }
 
 #capturing ami image from stopped instance 
