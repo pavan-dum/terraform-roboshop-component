@@ -8,7 +8,7 @@ resource "aws_instance" "main" {
 
   tags = merge(
     {
-        Name = "${var.project}-${var.Environment}-main"
+        Name = "${var.project}-${var.Environment}-${var.component}"
     },
   
         local.common_tags
@@ -36,7 +36,7 @@ provisioner "file" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo sh /tmp/bootstrap.sh ${var.component} ${var.Environment}"]
+      "sudo sh /tmp/bootstrap.sh ${var.component} ${var.Environment} ${var.app_version}"]
   }
 }
 
@@ -46,6 +46,12 @@ resource "aws_ec2_instance_state" "main" {
   instance_id = aws_instance.main.id
   state       = "stopped"
   depends_on  = [terraform_data.main]
+    tags = merge(
+    {
+        Name = "${var.project}-${var.Environment}-${var.component}"
+    },
+    local.common_tags
+  )
 }
 
 #capturing ami image from stopped instance 
@@ -132,10 +138,10 @@ resource "aws_launch_template" "main" {
 resource "aws_autoscaling_group" "main" {
   name                      = "${var.project}-${var.Environment}-${var.component}"
   max_size                  = 10
-  min_size                  = 2
+  min_size                  = 1
   health_check_grace_period = 120
   health_check_type         = "ELB"
-  desired_capacity          = 2
+  desired_capacity          = 1
   force_delete              = false
   
   launch_template {
@@ -167,7 +173,7 @@ resource "aws_autoscaling_group" "main" {
   content {
     key                 = tag.key
     value               = tag.value
-    propagate_at_launch = false
+    propagate_at_launch = true
   }
 
   }
@@ -213,7 +219,7 @@ resource "aws_lb_listener_rule" "main" {
 
 # destroy instance
 
-resource "terraform_data" "delete_instance" {
+resource "terraform_data" "main_instance" {
 
   triggers_replace = [
      aws_instance.main.id
